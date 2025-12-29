@@ -1,0 +1,6 @@
+com/testingpatterns/selfshunt/SomeService.class
+com/testingpatterns/selfshunt/ResultListener.class
+com/testingpatterns/crashtestdummy/PaymentService.class
+com/testingpatterns/crashtestdummy/Logger.class
+com/testingpatterns/logstring/Processor.class
+com/testingpatterns/logstring/Listener.class
