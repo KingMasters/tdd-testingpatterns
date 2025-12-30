@@ -3,9 +3,11 @@ Test Double
  ├─ Stub
  ├─ Fake
  ├─ Mock
- └─ Imposter (Spy)
+ ├─ Spy
+ ├─ Imposter
 
-Imposter (Spy) : Mock/Stub a benzer ama davranışsal olarak daha gelişmiş bir test double türüdür.
+
+Imposter : Mock/Stub a benzer ama davranışsal olarak daha gelişmiş bir test double türüdür.
         Imposter, gerçek nesnenin davranışlarını taklit eder ve genellikle gerçek nesnenin yerine geçer.
         Imposter'lar, gerçek nesnenin metodlarını çağırabilir ve bu metodların çağrılma sayısını,
         parametrelerini ve dönüş değerlerini izleyebilir.
