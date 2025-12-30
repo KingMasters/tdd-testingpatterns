@@ -1,0 +1,27 @@
+Test Double
+ ├─ Dummy
+ ├─ Stub
+ ├─ Fake
+ ├─ Mock
+ └─ Imposter (Spy)
+
+Imposter (Spy) : Mock/Stub a benzer ama davranışsal olarak daha gelişmiş bir test double türüdür.
+        Imposter, gerçek nesnenin davranışlarını taklit eder ve genellikle gerçek nesnenin yerine geçer.
+        Imposter'lar, gerçek nesnenin metodlarını çağırabilir ve bu metodların çağrılma sayısını,
+        parametrelerini ve dönüş değerlerini izleyebilir.
+        Bu sayede, test senaryolarında daha gerçekçi ve kapsamlı testler yapılabilir.
+        Imposter'lar, özellikle karmaşık sistemlerde ve entegrasyon testlerinde kullanılır.
+
+        3️⃣ Ne zaman Imposter kullanılır?
+        Kent Beck Imposter’ı şu durumlarda önerir:
+        🔴 Problem
+            Test edilen kod, başka bir nesneyle konuşuyor
+            Bu nesne:
+                Yavaş (DB, API, IO)
+                Yan etkili
+                Henüz yazılmamış
+            Testte:
+                “Şu metod çağrıldı mı?”
+                “Doğru parametre gitti mi?”
+                “Kaç kere çağrıldı?”
+            bunları görmek istiyorsun.
