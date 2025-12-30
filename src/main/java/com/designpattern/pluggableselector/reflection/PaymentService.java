@@ -6,6 +6,8 @@ import java.lang.reflect.Method;
     Burada davranış nesne değil, method olacak.
     Method isimleri = seçim anahtarı.
     Reflection ile Pluggable Selector (if yok)
+
+    Production da kullanmayın! Sadece test amaçlı!
 */
 class PaymentService {
 
