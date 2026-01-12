@@ -1,3 +1,284 @@
+Evet — şimdi **daha önce Kent Beck bakışıyla anlattığım “Migrate Data” refactoring’ini**,
+**senin verdiğin adımları birebir merkeze alarak**, aynı Extract / Inline / Move çizgisinde **net ve mekanik + zihinsel gerekçesiyle** açıklıyorum.
+
+Bu refactoring özellikle Beck’in şu fikrini çok iyi yansıtır:
+
+> **“Davranışı değil, veriyi adım adım değiştir.”**
+
+---
+
+# Kent Beck’e göre **Migrate Data**
+
+## Migrate Data nedir? (kısa hatırlatma)
+
+Kent Beck için **Migrate Data**:
+
+* Büyük bir “field değişikliği” değildir
+* Bir anda yapılan kırıcı dönüşüm değildir
+* **Eski ve yeni formatın bir süre birlikte yaşamasıdır**
+
+Amaç:
+
+> **Davranışı bozmadan veri temsilini değiştirmek**
+
+---
+
+# 1️⃣ KLASİK AKIŞ
+
+(Internal data format değişiyor)
+
+Senin verdiğin adımlarla tek tek gidelim.
+
+---
+
+## 1️⃣ Add an instance variable in the new format
+
+İlk refleks:
+
+> **Eskisini silme.**
+
+Yeni veri formatını **yanına ekle**.
+
+### Örnek
+
+```java
+class User {
+    String birthDate; // eski: "1990-01-01"
+}
+```
+
+Yeni format:
+
+```java
+class User {
+    String birthDate;       // eski
+    LocalDate birthDateV2;  // yeni
+}
+```
+
+Kent Beck açısından:
+
+* Risk yok
+* Davranış değişmedi
+* Testler yeşil
+
+---
+
+## 2️⃣ Set the new format variable everywhere you set the old format
+
+Ne zaman eskiyi set ediyorsan:
+
+* **Yeni formatı da set et**
+
+```java
+void setBirthDate(String date) {
+    this.birthDate = date;
+    this.birthDateV2 = LocalDate.parse(date);
+}
+```
+
+Bu adımın amacı:
+
+> **Verinin iki temsili de senkron kalsın**
+
+Henüz hiçbir kullanım değişmedi.
+
+---
+
+## 3️⃣ Use the new format variable everywhere you use the old format
+
+Şimdi **okuma tarafı** taşınır.
+
+Önce:
+
+```java
+int age() {
+    return Period.between(
+        LocalDate.parse(birthDate),
+        LocalDate.now()
+    ).getYears();
+}
+```
+
+Sonra:
+
+```java
+int age() {
+    return Period.between(
+        birthDateV2,
+        LocalDate.now()
+    ).getYears();
+}
+```
+
+Kent Beck için burası çok önemli:
+
+> **Davranış aynı, veri temsili farklı**
+
+---
+
+## 4️⃣ Delete the old format
+
+Artık:
+
+* Hiçbir yerde okunmuyor
+* Sadece yazılıyorsa
+
+➡️ **Sil**
+
+```java
+class User {
+    LocalDate birthDate;
+}
+```
+
+Bu noktada:
+
+* Kod sadeleşir
+* Teknik borç kapanır
+
+---
+
+## 5️⃣ Change the external interface to reflect the new format
+
+En sona bırakılır çünkü:
+
+* Burası **kırıcı değişikliktir**
+* En riskli adımdır
+
+```java
+void setBirthDate(LocalDate date) {
+    this.birthDate = date;
+}
+```
+
+Kent Beck’in yaklaşımı:
+
+> **Önce içeride güvene al, dışarıyı en son değiştir**
+
+---
+
+# 2️⃣ ALTERNATİF AKIŞ
+
+(API önce değişmeliysa)
+
+Beck özellikle şunu ekler:
+
+> “Sometimes, however, you will want to change the API first.”
+
+Bu genelde:
+
+* Public API
+* Kütüphane
+* Çok kullanılan servislerde olur
+
+---
+
+## 1️⃣ Add a parameter in the new format
+
+```java
+void setBirthDate(LocalDate date) {
+    this.birthDate = date.toString(); // şimdilik
+}
+```
+
+Yeni API dışarıya açıldı
+Ama içeride hâlâ eski format var.
+
+---
+
+## 2️⃣ Translate from the new format to the old internal representation
+
+```java
+void setBirthDate(LocalDate date) {
+    this.birthDate = date.toString(); // internal hâlâ eski
+}
+```
+
+Bu adım:
+
+> **Uyumluluk katmanı**dır
+
+---
+
+## 3️⃣ Delete the old format parameter
+
+```java
+// setBirthDate(String date) ❌ silinir
+```
+
+Artık dışarıdan:
+
+* Sadece yeni format gelir
+
+---
+
+## 4️⃣ Replace uses of the old format with the new format
+
+Şimdi içeri geçilir:
+
+* Okumalar
+* Hesaplamalar
+* Karşılaştırmalar
+
+Yeni formatla yapılır.
+
+---
+
+## 5️⃣ Delete the old format
+
+En son:
+
+* Field
+* Converter
+* Geçici kodlar
+
+➡️ **Tam temizlik**
+
+---
+
+# Kent Beck neden bu kadar adımlı anlatıyor?
+
+Çünkü Migrate Data’da en büyük risk şudur:
+
+> **Sessiz davranış değişikliği**
+
+Bu adımlar:
+
+* Her aşamada sistem çalışır
+* Testler yeşildir
+* Geri dönüş mümkündür
+
+---
+
+# Migrate Data ↔ Diğer refactoring’ler
+
+Çok sık şu zincir oluşur:
+
+* Extract Method → veriye dokunmak için
+* Move Method → davranışı doğru yere almak için
+* **Migrate Data → modeli düzeltmek için**
+* Inline → geçici kodları silmek için
+
+---
+
+# Kısa özet (Kent Beck diliyle)
+
+Migrate Data:
+
+* “Field değiştirme” değildir
+* “Büyük refactor” değildir
+
+👉 **Eskiyle yeniyi bir süre birlikte yaşat**
+👉 **Davranışı önce koru**
+👉 **Temizliği en sona bırak**
+
+Altın cümle:
+
+> **“Change representation without changing behavior.”**
+
+---
+
 # Kent Beck – Migrate Data
 
 Kent Beck’in **Migrate Data** kavramı, yazılım tasarımında ve özellikle **refactoring** sürecinde,  
