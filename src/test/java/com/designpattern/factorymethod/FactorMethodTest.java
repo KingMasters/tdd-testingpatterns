@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         Bir tasarım deseni değil, bir refactoring adımıdır
         Testleri sadeleştirmek için vardır
         TDD akışının doğal sonucu olarak ortaya çıkar
+        Test için bir setup methodudur ve ihtiyac duyulan methodu uretir
 
     📌 Örnek : Money (Dollar, Franc) Factory Method
         Money dollar = Money.dollar(5);

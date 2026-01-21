@@ -22,7 +22,7 @@ Kent Beck bakışıyla: önce test, sonra en basit komut.
   9️⃣ Kent Beck perspektifi
         Command Pattern → Testability
         Her Command → tek sorumluluk
-        Fixture küçük
+        Fixture küçük = Test Setup (Testten önce kurulan ortam, Testin varsaydığı dünya)
         External fixture yok
  */
 

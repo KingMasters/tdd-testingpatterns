@@ -1,0 +1,11 @@
+1-Command
+2-Value Object
+3-Null Object
+4-Template Method
+5-Pluggable Object
+6-Pluggable Selector
+7-Factory Method
+8-Imposter
+9-Composite
+10-Collection Parameter
+11-Singleton
