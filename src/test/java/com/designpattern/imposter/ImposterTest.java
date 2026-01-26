@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /*
+Fake test double’dır; ama Imposter ise çoğu zaman sadece kötü seçilmiş bir kelimedir, genelde Fake anlamında kullanılır.
+
 Imposter (Spy) : Mock/Stub a benzer ama davranışsal olarak daha gelişmiş bir test double türüdür.
         Imposter, gerçek nesnenin davranışlarını taklit eder ve genellikle gerçek nesnenin yerine geçer.
         Imposter'lar, gerçek nesnenin metodlarını çağırabilir ve bu metodların çağrılma sayısını,
